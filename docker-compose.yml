@@ -1,0 +1,41 @@
+# Landing MegaBusiness - despliegue aislado en el VPS (/opt/megabusiness-landing)
+# Caddy hace de proxy inverso: el puerto solo escucha en 127.0.0.1.
+name: megabusiness-landing
+
+services:
+  web:
+    build:
+      context: .
+      args:
+        NEXT_PUBLIC_WHATSAPP_NUMBER: ${NEXT_PUBLIC_WHATSAPP_NUMBER:?falta en .env}
+        NEXT_PUBLIC_SITE_URL: ${NEXT_PUBLIC_SITE_URL:-https://megabusiness.tech}
+        NEXT_PUBLIC_COMMUNITY_URL: ${NEXT_PUBLIC_COMMUNITY_URL:-}
+    image: megabusiness-landing:latest
+    container_name: megabusiness-landing
+    restart: unless-stopped
+    # Secretos de servidor: se leen en tiempo de ejecución, no quedan dentro de la imagen
+    environment:
+      PANEL_API_URL: ${PANEL_API_URL:-http://socios-crm-web:8080/api/n8n/create-demo.php}
+      PANEL_API_TOKEN: ${PANEL_API_TOKEN:?falta en .env}
+    networks: [default, panel]
+    ports:
+      - "127.0.0.1:3020:3000"
+    mem_limit: 256m
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /app/.next/cache
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+networks:
+  default: {}
+  # Red interna (sin internet) compartida solo con el contenedor del panel
+  panel:
+    name: megabusiness-panel
+    external: true
