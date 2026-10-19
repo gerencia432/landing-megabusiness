@@ -12,6 +12,8 @@
 
 # testing
 /coverage
+/playwright-report/
+/test-results/
 
 # next.js
 /.next/
@@ -20,23 +22,58 @@
 # production
 /build
 
-# misc
-.DS_Store
-*.pem
+# typescript
+*.tsbuildinfo
+next-env.d.ts
 
-# debug
+# env files: solo se versiona la plantilla
+.env*
+!.env.example
+
+# secretos y certificados
+*.pem
+*.key
+*.crt
+*.p12
+
+# debug / logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
+*.log
+logs/
 
-# env files (can opt-in for committing if needed)
-.env*
-!.env.example
+# backups, volcados y comprimidos (no deben llegar al repositorio)
+*.bak
+*.bak-*
+*.backup
+*.sql
+*.sql.gz
+*.zip
+*.tar
+*.tar.gz
+
+# docker: ajustes locales
+docker-compose.override.yml
 
 # vercel
 .vercel
 
-# typescript
-*.tsbuildinfo
-next-env.d.ts
+# sistema operativo
+.DS_Store
+Thumbs.db
+ehthumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# editores
+.vscode/*
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+*~
+
+# herramientas locales
+.claude/settings.local.json
